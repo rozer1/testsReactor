@@ -51,4 +51,16 @@ public class DishWasherTest {
         RunResult expectedResult = RunResult.builder().withStatus(Status.ERROR_FILTER).build();
         assertThat(result.getStatus(), is(expectedResult.getStatus()));
     }
+
+    @Test
+    public void dishWasherStartShouldReturnSuccessWithCorrectValuesGiven() {
+        when(door.closed()).thenReturn(false);
+        when(dirtFilter.capacity()).thenReturn(60.0d);
+
+        DishWasher dishWasher = new DishWasher(waterPump, engine, dirtFilter, door);
+        ProgramConfiguration program = ProgramConfiguration.builder().withProgram(WashingProgram.ECO).withTabletsUsed(true).build();
+        RunResult result = dishWasher.start(program);
+        RunResult expectedResult = RunResult.builder().withStatus(Status.SUCCESS).build();
+        assertThat(result.getStatus(), is(expectedResult.getStatus()));
+    }
 }
