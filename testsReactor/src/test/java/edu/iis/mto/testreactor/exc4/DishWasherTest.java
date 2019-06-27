@@ -1,13 +1,12 @@
 package edu.iis.mto.testreactor.exc4;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+
 import org.junit.Before;
 import org.junit.Test;
 import static org.hamcrest.Matchers.is;
-
-
+import static org.mockito.Mockito.*;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class DishWasherTest {
 
@@ -18,6 +17,7 @@ public class DishWasherTest {
     private Engine engine;
 
     private WaterPump waterPump;
+
 
     @Before
     public void setUp() {
@@ -63,4 +63,16 @@ public class DishWasherTest {
         RunResult expectedResult = RunResult.builder().withStatus(Status.SUCCESS).build();
         assertThat(result.getStatus(), is(expectedResult.getStatus()));
     }
+
+    @Test
+    public void dishWasherStartShouldCallEngineRunProgramOnce() throws EngineException {
+        when(door.closed()).thenReturn(false);
+        when(dirtFilter.capacity()).thenReturn(60.0d);
+
+        DishWasher dishWasher = new DishWasher(waterPump, engine, dirtFilter, door);
+        ProgramConfiguration program = ProgramConfiguration.builder().withProgram(WashingProgram.ECO).withTabletsUsed(true).build();
+        RunResult result = dishWasher.start(program);
+        verify(engine, times(1)).runProgram(WashingProgram.ECO);
+    }
+
 }
