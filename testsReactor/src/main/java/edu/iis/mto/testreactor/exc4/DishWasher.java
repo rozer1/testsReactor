@@ -1,6 +1,6 @@
 package edu.iis.mto.testreactor.exc4;
 
-import static edu.iis.mto.testreactor.exc4.Status.DOOR_OPEN;
+import static edu.iis.mto.testreactor.exc4.Status.DOOR_OPEN_ERROR;
 import static edu.iis.mto.testreactor.exc4.Status.SUCCESS;
 import static java.util.Objects.requireNonNull;
 
@@ -13,16 +13,16 @@ public class DishWasher {
     private final Door door;
 
     public DishWasher(WaterPump waterPump, Engine engine, DirtFilter dirtFilter, Door door) {
-        this.waterPump = requireNonNull(waterPump, "waterPump = null");
-        this.engine = requireNonNull(engine, "engine == null");
         this.dirtFilter = requireNonNull(dirtFilter, "dirtFilter == null");
+        this.engine = requireNonNull(engine, "engine == null");
+        this.waterPump = requireNonNull(waterPump, "waterPump = null");
         this.door = requireNonNull(door, "door == null");
     }
 
     public RunResult start(ProgramConfiguration program) {
         requireNonNull(program, "program == null");
         if (door.closed()) {
-            return error(DOOR_OPEN);
+            return error(DOOR_OPEN_ERROR);
         }
         if (filterIsClean(program)) {
             return run(program.getProgram());
@@ -55,7 +55,7 @@ public class DishWasher {
 
     private void runProgram(WashingProgram program) throws EngineException, PumpException {
         waterPump.pour(program);
-        engine.runProgram(program);
+        engine.runProgram(program.getTimeInMinutes());
         waterPump.drain();
     }
 

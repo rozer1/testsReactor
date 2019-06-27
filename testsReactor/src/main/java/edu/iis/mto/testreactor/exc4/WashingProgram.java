@@ -6,14 +6,14 @@ public enum WashingProgram {
     RINSE(14),
     NIGHT(300);
 
-    private int timeMinutes;
+    private int timeInMinutes;
 
     private WashingProgram(int timeMinutes) {
-        this.timeMinutes = timeMinutes;
+        this.timeInMinutes = timeMinutes;
 
     }
 
     public int getTimeInMinutes() {
-        return timeMinutes;
+        return timeInMinutes;
     }
 }
